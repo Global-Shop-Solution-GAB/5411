@@ -1,0 +1,472 @@
+Program.Sub.ScreenSU.Start
+Gui.FormMaintenance..Create
+Gui.FormMaintenance..Caption("Packsize Interface Maintenance")
+Gui.FormMaintenance..Size(6960,6285)
+Gui.FormMaintenance..MinX(0)
+Gui.FormMaintenance..MinY(0)
+Gui.FormMaintenance..Position(0,0)
+Gui.FormMaintenance..BackColor(-2147483633)
+Gui.FormMaintenance..MousePointer(0)
+Gui.FormMaintenance..Event(UnLoad,FormMaintenance_UnLoad)
+Gui.FormMaintenance..MaxButton(False)
+Gui.FormMaintenance..Sizeable(False)
+Gui.FormMaintenance.tabMaint.Create(Tab)
+Gui.FormMaintenance.tabMaint.Size(6960,5580)
+Gui.FormMaintenance.tabMaint.Position(0,0)
+Gui.FormMaintenance.tabMaint.Tabs(2)
+Gui.FormMaintenance.tabMaint.SetTab(0)
+Gui.FormMaintenance.tabMaint.Caption("Design IDs")
+Gui.FormMaintenance.tabMaint.SetTab(1)
+Gui.FormMaintenance.tabMaint.Caption("Settings")
+Gui.FormMaintenance.lblDesignID.Create(Label,"Design ID :",True,870,255,0,3195,300,True,0,"Arial",8,-2147483633,0)
+Gui.FormMaintenance.lblDesignID.Parent("tabMaint",0)
+Gui.FormMaintenance.txtDesignID.Create(TextBox,"",True,1350,300,0,4095,210,True,0,"Arial",8,-2147483643,1)
+Gui.FormMaintenance.txtDesignID.Parent("tabMaint",0)
+Gui.FormMaintenance.txtDesignID.MaxLength(7)
+Gui.FormMaintenance.lblName.Create(Label,"Name :",True,630,255,0,75,300,True,0,"Arial",8,-2147483633,0)
+Gui.FormMaintenance.lblName.Parent("tabMaint",0)
+Gui.FormMaintenance.txtName.Create(TextBox,"",True,2325,300,0,705,210,True,0,"Arial",8,-2147483643,1)
+Gui.FormMaintenance.txtName.Parent("tabMaint",0)
+Gui.FormMaintenance.txtName.MaxLength(20)
+Gui.FormMaintenance.cmdAdd.Create(Button)
+Gui.FormMaintenance.cmdAdd.Size(855,375)
+Gui.FormMaintenance.cmdAdd.Position(5595,180)
+Gui.FormMaintenance.cmdAdd.Parent("tabMaint",0)
+Gui.FormMaintenance.cmdAdd.Caption("Add")
+Gui.FormMaintenance.cmdAdd.Event(Click,cmdAdd_Click)
+Gui.FormMaintenance.gsgcDesignIDs.Create(GsGridControl)
+Gui.FormMaintenance.gsgcDesignIDs.Size(6900,4590)
+Gui.FormMaintenance.gsgcDesignIDs.Position(-45,615)
+Gui.FormMaintenance.gsgcDesignIDs.Parent("tabMaint",0)
+Gui.FormMaintenance.gsgcDesignIDs.Event(RowCellClick,gsgcDesignIDs_RowCellClick)
+Gui.FormMaintenance.lblExp.Create(Label,"Export Path :",True,1050,255,0,30,225,True,0,"Arial",8,-2147483633,0)
+Gui.FormMaintenance.lblExp.Parent("tabMaint",1)
+Gui.FormMaintenance.txtExportPath.Create(TextBox,"",True,6075,300,0,75,465,True,0,"Arial",8,-2147483643,1)
+Gui.FormMaintenance.txtExportPath.Parent("tabMaint",1)
+Gui.FormMaintenance.txtExportPath.MaxLength(75)
+Gui.FormMaintenance.txtImportPath.Create(TextBox,"",True,6075,300,0,75,1305,True,0,"Arial",8,-2147483643,1)
+Gui.FormMaintenance.txtImportPath.Parent("tabMaint",1)
+Gui.FormMaintenance.txtImportPath.MaxLength(75)
+Gui.FormMaintenance.lblImp.Create(Label,"Import Path :",True,1050,255,0,30,1065,True,0,"Arial",8,-2147483633,0)
+Gui.FormMaintenance.lblImp.Parent("tabMaint",1)
+Gui.FormMaintenance.lblLabelFile.Create(Label,"Label Temp File :",True,1290,255,0,30,1920,True,0,"Arial",8,-2147483633,0)
+Gui.FormMaintenance.lblLabelFile.Parent("tabMaint",1)
+Gui.FormMaintenance.txtLabelFile.Create(TextBox,"",True,6075,300,0,75,2160,True,0,"Arial",8,-2147483643,1)
+Gui.FormMaintenance.txtLabelFile.Parent("tabMaint",1)
+Gui.FormMaintenance.txtLabelFile.MaxLength(75)
+Gui.FormMaintenance.cmdFileBrowser.Create(Button)
+Gui.FormMaintenance.cmdFileBrowser.Size(405,405)
+Gui.FormMaintenance.cmdFileBrowser.Position(6195,2100)
+Gui.FormMaintenance.cmdFileBrowser.Parent("tabMaint",1)
+Gui.FormMaintenance.cmdFileBrowser.Caption("^")
+Gui.FormMaintenance.cmdFileBrowser.Event(Click,cmdFileBrowser_Click)
+Gui.FormMaintenance.cmdFolderBrowserImport.Create(Button)
+Gui.FormMaintenance.cmdFolderBrowserImport.Size(405,405)
+Gui.FormMaintenance.cmdFolderBrowserImport.Position(6195,1245)
+Gui.FormMaintenance.cmdFolderBrowserImport.Parent("tabMaint",1)
+Gui.FormMaintenance.cmdFolderBrowserImport.Caption("^")
+Gui.FormMaintenance.cmdFolderBrowserImport.Event(Click,cmdFolderBrowserImport_Click)
+Gui.FormMaintenance.cmdFolderBrowserExport.Create(Button)
+Gui.FormMaintenance.cmdFolderBrowserExport.Size(405,405)
+Gui.FormMaintenance.cmdFolderBrowserExport.Position(6195,405)
+Gui.FormMaintenance.cmdFolderBrowserExport.Parent("tabMaint",1)
+Gui.FormMaintenance.cmdFolderBrowserExport.Caption("^")
+Gui.FormMaintenance.cmdFolderBrowserExport.Event(Click,cmdFolderBrowserExport_Click)
+Gui.FormMaintenance.lblDefaultBin.Create(Label,"Default Bin to Issue From :",True,2130,255,0,30,2700,True,0,"Arial",8,-2147483633,0)
+Gui.FormMaintenance.lblDefaultBin.Parent("tabMaint",1)
+Gui.FormMaintenance.txtDefaultBin.Create(TextBox,"",True,1380,300,0,75,2955,True,0,"Arial",8,-2147483643,1)
+Gui.FormMaintenance.txtDefaultBin.Parent("tabMaint",1)
+Gui.FormMaintenance.txtDefaultBin.Locked(True)
+Gui.FormMaintenance.cmdBinBrowser.Create(Button)
+Gui.FormMaintenance.cmdBinBrowser.Size(405,405)
+Gui.FormMaintenance.cmdBinBrowser.Position(1500,2895)
+Gui.FormMaintenance.cmdBinBrowser.Parent("tabMaint",1)
+Gui.FormMaintenance.cmdBinBrowser.Caption("^")
+Gui.FormMaintenance.cmdBinBrowser.Event(Click,cmdBinBrowser_Click)
+Gui.FormMaintenance.cmdSave.Create(Button)
+Gui.FormMaintenance.cmdSave.Size(990,375)
+Gui.FormMaintenance.cmdSave.Position(30,5610)
+Gui.FormMaintenance.cmdSave.Caption("Save")
+Gui.FormMaintenance.cmdSave.Event(Click,cmdSave_Click)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+'GCG_5411_Maintenance.g2u
+'Trey S
+'1/23/2019
+'For Vulcan Industires
+'This script is for setting up options for the Packsize interface
+
+F.ODBC.Connection!Con.OpenCompanyConnection
+F.Intrinsic.Control.CallSub(LoadDesignIDs)
+F.Intrinsic.Control.CallSub(LoadIDGrid)
+F.Intrinsic.Control.CallSub(LoadSettings)
+F.ODBC.Connection!Con.Close
+
+GUI.FormMaintenance.tabMaint.SetTab(0)
+GUI.FormMaintenance..Show
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.FormMaintenance_UnLoad.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+F.Intrinsic.Control.CallSub(cmdSave_Click)
+
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.FormMaintenance_UnLoad.End
+
+Program.Sub.cmdAdd_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sName.Declare(String)
+V.Local.sID.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.sSelect.Declare(String)
+
+GUI.FormMaintenance.cmdAdd.Enabled(False)
+V.Local.sName.Set(V.Screen.FormMaintenance!txtName.Text.Trim)
+V.Local.sID.Set(V.Screen.FormMaintenance!txtDesignID.Text.Trim)
+
+F.Intrinsic.Control.If(V.Local.sID.Trim, =, "")
+	F.Intrinsic.UI.Msgbox("Must enter a Design ID.")
+	GUI.FormMaintenance.cmdAdd.Enabled(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("Design_ID = '{0}'", V.Local.sID, V.Local.sSelect)
+F.Data.DataTable.Select("dtIDs", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	F.Intrinsic.UI.Msgbox("This Design ID already exists.")
+	GUI.FormMaintenance.cmdAdd.Enabled(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Local.sName.Trim, !=, "")
+	F.Intrinsic.String.Build("Name = '{0}'", V.Local.sName, V.Local.sSelect)
+	F.Data.DataTable.Select("dtIDs", V.Local.sSelect, V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+		F.Intrinsic.UI.Msgbox("A Design ID with this name already exists.")
+		GUI.FormMaintenance.cmdAdd.Enabled(True)
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.AddRow("dtIDs", "Name", V.Local.sName, "Design_ID", V.Local.sID)
+GUI.FormMaintenance.txtDesignID.Text("")
+GUI.FormMaintenance.txtName.Text("")
+GUI.FormMaintenance.cmdAdd.Enabled(True)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdAdd_Click.End
+
+Program.Sub.LoadDesignIDs.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sSQL.Declare(String)
+
+V.Local.sSQL.Set("Select RTRIM(NAME) as Name, RTRIM(DESIGN_ID) as Design_ID, ID from GCG_5411_DesignID order by Name")
+F.Data.DataTable.CreateFromSQL("dtIDs", "Con", V.Local.sSQL, True)
+
+F.Data.DataTable.AddColumn("dtIDs", "Delete", "String")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.LoadDesignIDs.End
+
+Program.Sub.LoadIDGrid.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+GUI.FormMaintenance.gsgcDesignIDs.AddGridviewFromDataTable("gvIDs", "dtIDs")
+
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "ID", "Visible", False)
+
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Design_ID", "Caption", "Design ID")
+
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Delete", "Caption", " ")
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Name", "HeaderFontBold", True)
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Design_ID", "HeaderFontBold", True)
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Delete", "HeaderFontBold", True)
+
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Name", "AllowEdit", True)
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Design_ID", "AllowEdit", True)
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Delete", "AllowEdit", False)
+
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Name", "ReadOnly", False)
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Design_ID", "ReadOnly", False)
+GUI.FormMaintenance.gsgcDesignIDs.SetColumnProperty("gvIDs", "Delete", "ReadOnly", True)
+
+GUI.FormMaintenance.gsgcDesignIDs.ColumnEdit("gvIDs", "Delete", "EditorButton", "Delete")
+
+GUI.FormMaintenance.gsgcDesignIDs.MainView("gvIDs")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.LoadIDGrid.End
+
+Program.Sub.LoadSettings.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sSQL.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.sSelect.Declare(String)
+V.Local.sPart.Declare(String)
+
+V.Local.sSQL.Set("select ID, RTRIM(SETTING) as SETTING, RTRIM(VALUE) as VALUE from GCG_5411_Maintenance")
+F.Data.DataTable.CreateFromSQL("dtSettings", "Con", V.Local.sSQL, True)
+
+'export path
+V.Local.sSelect.Set("SETTING = 'EXP'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	GUI.FormMaintenance.txtExportPath.Text(V.DataTable.dtSettings(V.Local.sRet).Value!FieldValTrim)
+'F.Intrinsic.Control.Else
+'	F.Data.DataTable.AddRow("dtSettings", "Setting", "EXP", "Value", "")
+F.Intrinsic.Control.EndIf
+
+'import path
+V.Local.sSelect.Set("SETTING = 'IMP'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	GUI.FormMaintenance.txtImportPath.Text(V.DataTable.dtSettings(V.Local.sRet).Value!FieldValTrim)
+'F.Intrinsic.Control.Else
+'	F.Data.DataTable.AddRow("dtSettings", "Setting", "IMP", "Value", "")
+F.Intrinsic.Control.EndIf
+
+'label path
+V.Local.sSelect.Set("SETTING = 'LBL'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	GUI.FormMaintenance.txtLabelFile.Text(V.DataTable.dtSettings(V.Local.sRet).Value!FieldValTrim)
+'F.Intrinsic.Control.Else
+'	F.Data.DataTable.AddRow("dtSettings", "Setting", "LBL", "Value", "")
+F.Intrinsic.Control.EndIf
+
+'default bin
+V.Local.sSelect.Set("SETTING = 'BIN'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+
+	GUI.FormMaintenance.txtDefaultBin.Text(V.DataTable.dtSettings(V.Local.sRet).VALUE!FieldValTrim)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.LoadSettings.End
+
+Program.Sub.SaveDesignIDs.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+F.Data.DataTable.SaveToDB("dtIDs", "Con", "GCG_5411_DesignID", "ID", 7, "ID@!@ID*!*NAME@!@NAME*!*DESIGN_ID@!@DESIGN_ID")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.SaveDesignIDs.End
+
+Program.Sub.SaveSettings.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sRet.Declare(String)
+V.Local.sSelect.Declare(String)
+V.Local.sPart.Declare(String)
+V.Local.iID.Declare(Long)
+
+'export path
+V.Local.sSelect.Set("SETTING = 'EXP'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	F.Data.DataTable.SetValue("dtSettings", V.Local.sRet, "VALUE", V.Screen.FormMaintenance!txtExportPath.Text.Trim)
+F.Intrinsic.Control.Else
+	F.Data.DataTable.Compute("dtSettings", "Max(ID)", "", V.Local.iID)
+	F.Data.DataTable.AddRow("dtSettings", "ID", V.Local.iID.++, "Setting", "EXP", "Value", V.Screen.FormMaintenance!txtExportPath.Text.Trim)
+F.Intrinsic.Control.EndIf
+
+'import path
+V.Local.sSelect.Set("SETTING = 'IMP'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	F.Data.DataTable.SetValue("dtSettings", V.Local.sRet, "VALUE", V.Screen.FormMaintenance!txtImportPath.Text.Trim)
+F.Intrinsic.Control.Else
+	F.Data.DataTable.Compute("dtSettings", "Max(ID)", "", V.Local.iID)
+	F.Data.DataTable.AddRow("dtSettings", "ID", V.Local.iID.++, "Setting", "IMP", "Value", V.Screen.FormMaintenance!txtImportPath.Text.Trim)
+F.Intrinsic.Control.EndIf
+
+'label path
+V.Local.sSelect.Set("SETTING = 'LBL'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	F.Data.DataTable.SetValue("dtSettings", V.Local.sRet, "VALUE", V.Screen.FormMaintenance!txtLabelFile.Text.Trim)
+F.Intrinsic.Control.Else
+	F.Data.DataTable.Compute("dtSettings", "Max(ID)", "", V.Local.iID)
+	F.Data.DataTable.AddRow("dtSettings", "ID", V.Local.iID, "Setting", "LBL", "Value", V.Screen.FormMaintenance!txtLabelFile.Text.Trim)
+F.Intrinsic.Control.EndIf
+
+'default bin
+V.Local.sSelect.Set("SETTING = 'BIN'")
+F.Data.DataTable.Select("dtSettings", V.Local.sSelect, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.Trim, !=, "***NORETURN***")
+	F.Data.DataTable.SetValue("dtSettings", V.Local.sRet, "VALUE", V.Screen.FormMaintenance!txtDefaultBin.Text.Trim)
+F.Intrinsic.Control.Else
+	F.Data.DataTable.Compute("dtSettings", "Max(ID)", "", V.Local.iID)
+	F.Data.DataTable.AddRow("dtSettings", "ID", V.Local.iID.++, "Setting", "BIN", "Value", V.Screen.FormMaintenance!txtDefaultBin.Text.Trim)
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.AcceptChanges("dtSettings")
+F.Data.DataTable.SaveToDB("dtSettings", "Con", "GCG_5411_Maintenance", "ID*!*SETTING", 256, "ID@!@ID*!*Setting@!@Setting*!*Value@!@Value")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.SaveSettings.End
+
+Program.Sub.gsgcDesignIDs_RowCellClick.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+F.Intrinsic.Control.If(V.Args.Column.Trim, =, "Delete")
+	F.Data.DataTable.DeleteRow("dtIDs", V.Args.RowIndex)
+	'F.Data.DataTable.AcceptChanges("dtIDs")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.gsgcDesignIDs_RowCellClick.End
+
+Program.Sub.cmdSave_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+GUI.FormMaintenance.cmdSave.Enabled(False)
+F.ODBC.Connection!Con.OpenCompanyConnection
+F.Intrinsic.Control.CallSub(SaveDesignIDs)
+F.Intrinsic.Control.CallSub(SaveSettings)
+F.ODBC.Connection!Con.Close
+GUI.FormMaintenance.cmdSave.Enabled(True)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdSave_Click.End
+
+Program.Sub.cmdFileBrowser_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+GUI.FormMaintenance.cmdFileBrowser.Enabled(False)
+V.Local.sRet.Declare(String)
+F.Intrinsic.UI.ShowOpenFileDialog("", "", V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.IsNotCancel)
+	GUI.FormMaintenance.txtLabelFile.Text(V.Local.sRet)
+F.Intrinsic.Control.EndIf
+GUI.FormMaintenance.cmdFileBrowser.Enabled(True)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdFileBrowser_Click.End
+
+Program.Sub.cmdFolderBrowserExport_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+GUI.FormMaintenance.cmdFolderBrowserExport.Enabled(False)
+V.Local.sRet.Declare(String)
+F.Intrinsic.UI.FolderBrowser("", 0, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.IsNotCancel)
+	GUI.FormMaintenance.txtExportPath.Text(V.Local.sRet)
+F.Intrinsic.Control.EndIf
+GUI.FormMaintenance.cmdFolderBrowserExport.Enabled(True)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdFolderBrowserExport_Click.End
+
+Program.Sub.cmdFolderBrowserImport_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+GUI.FormMaintenance.cmdFolderBrowserImport.Enabled(False)
+V.Local.sRet.Declare(String)
+F.Intrinsic.UI.FolderBrowser("", 0, V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.IsNotCancel)
+	GUI.FormMaintenance.txtImportPath.Text(V.Local.sRet)
+F.Intrinsic.Control.EndIf
+GUI.FormMaintenance.cmdFolderBrowserImport.Enabled(True)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdFolderBrowserImport_Click.End
+
+Program.Sub.cmdBinBrowser_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.Browser(150, "", V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet.IsNotCancel)
+	F.Intrinsic.String.Split(V.Local.sRet, "*!*", V.Local.sRet)
+	GUI.FormMaintenance.txtDefaultBin.Text(V.Local.sRet(0).Trim)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdBinBrowser_Click.End
