@@ -1,0 +1,104 @@
+Program.Sub.Preflight.Start
+V.Global.sCustomLoggingError.Declare(String, "")
+Program.Sub.Preflight.End
+
+'call LOGGINGAddLog
+'pass a project #, and a message
+'Folder will be created if necessary for project in Global\Custom
+'Log file will be created if necessary 
+'date and time will be automatically added
+
+Program.Sub.LOGCheckDir.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare(String)
+
+'check if the given import directories exist
+'create them if they don't
+
+V.Local.sPath.Declare(String)
+V.Local.bExists.Declare(Boolean)
+
+V.Local.sPath.Set(V.Args.Path)
+F.Intrinsic.File.DirExists(V.Local.sPath, V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.File.CreateDir(V.Local.sPath)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	V.Global.sCustomLoggingError.Set(V.Local.sError)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndTry
+Program.Sub.LOGCheckDir.End
+
+Program.Sub.LOGGINGCheckFile.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare(String)
+
+'check if the given file exists
+'create it if it doesn't
+
+V.Local.sFile.Declare(String)
+V.Local.bExists.Declare(Boolean)
+V.Local.sContents.Declare(String)
+
+V.Local.sFile.Set(V.Args.File)
+F.Intrinsic.File.Exists(V.Local.sFile, V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.String.Build("{0} {1}: Log Start", V.Ambient.Date.FormatYYYY-MM-DD, V.Ambient.Time.Format!HH:NN:SS, V.Local.sContents)
+	F.Intrinsic.File.String2File(V.Local.sFile, V.Local.sContents)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	V.Global.sCustomLoggingError.Set(V.Local.sError)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndTry
+Program.Sub.LOGGINGCheckFile.End
+
+Program.Sub.LOGGINGAddLog.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare(String)
+
+'pass a project #, and a message
+'date and time will be automatically added
+
+V.Local.sProject.Declare(String)
+V.Local.sMessage.Declare(String)
+V.Local.bExists.Declare(Boolean)
+V.Local.sPath.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.sContents.Declare(String)
+
+'these error messages are for developers, should never happen in finished product
+F.Intrinsic.Variable.ArgExists("Project", V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.UI.Msgbox("Error: LOGGINGAddLog subroutine requires argument 'Project'")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Variable.ArgExists("Message", V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.UI.Msgbox("Error: LOGGINGAddLog subroutine requires argument 'Message'")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+V.Local.sProject.Set(V.Args.Project.Trim)
+V.Local.sMessage.Set(V.Args.Message.Trim)
+
+F.Intrinsic.File.MakeFilenameFriendly(V.Local.sProject, V.Local.sProject)
+F.Intrinsic.String.Build("{0}\Custom\{1}", V.Caller.GlobalDir, V.Local.sProject, V.Local.sPath)
+F.Intrinsic.Control.CallSub(LOGCheckDir, "Path", V.Local.sPath)
+
+F.Intrinsic.String.Build("{0}\{1}_Log.txt", V.Local.sPath, V.Local.sProject, V.Local.sFile)
+F.Intrinsic.Control.CallSub(LOGGINGCheckFile, "File", V.Local.sFile)
+
+F.Intrinsic.String.Build("{0} {1}: {2}", V.Ambient.Date.FormatYYYY-MM-DD, V.Ambient.Time.Format!HH:NN:SS, V.Local.sMessage, V.Local.sContents)
+F.Intrinsic.File.Append2FileNewLine(V.Local.sFile, V.Local.sContents)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	V.Global.sCustomLoggingError.Set(V.Local.sError)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndTry
+Program.Sub.LOGGINGAddLog.End
