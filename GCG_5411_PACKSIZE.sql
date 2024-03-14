@@ -1,0 +1,31 @@
+/* ==========================================
+ * TABLE: GCG_5411_PACKSIZE
+ * ========================================== */
+CREATE TABLE "GCG_5411_PACKSIZE"(
+ "ID" IDENTITY DEFAULT '0',
+ "PART" CHAR(20),
+ "LOC" CHAR(2),
+ "ITEM" CHAR(15),
+ "LENGTH" NUMERIC(13,4),
+ "WIDTH" NUMERIC(13,4),
+ "THICK" INTEGER,
+ "DESIGN_ID" CHAR(7),
+ "QTY_PER" INTEGER,
+ "HEIGHT" NUMERIC(13,4),
+ "SEQUENCE" INTEGER,
+ "X1" CHAR(30),
+ "X2" CHAR(30),
+ "X3" CHAR(30),
+ "X4" CHAR(30),
+ "X5" CHAR(30),
+ "X6" CHAR(30),
+ "X7" CHAR(30),
+ "X8" CHAR(30),
+ "X9" CHAR(30),
+ "X10" CHAR(30),
+ PRIMARY KEY ("ID"),
+ UNIQUE ("ID"));
+
+CREATE UNIQUE INDEX "PK_ID" USING 0 ON "GCG_5411_PACKSIZE"("ID");
+
+
