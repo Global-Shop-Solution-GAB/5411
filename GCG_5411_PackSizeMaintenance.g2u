@@ -1,0 +1,387 @@
+Program.Sub.ScreenSU.Start
+Gui.FormPacksizeMaintenance..Create
+Gui.FormPacksizeMaintenance..Caption("Packsize Maintenance")
+Gui.FormPacksizeMaintenance..Size(20850,5535)
+Gui.FormPacksizeMaintenance..MinX(0)
+Gui.FormPacksizeMaintenance..MinY(0)
+Gui.FormPacksizeMaintenance..Position(0,0)
+Gui.FormPacksizeMaintenance..BackColor(-2147483633)
+Gui.FormPacksizeMaintenance..MousePointer(0)
+Gui.FormPacksizeMaintenance..Event(UnLoad,FormPacksizeMaintenance_UnLoad)
+Gui.FormPacksizeMaintenance.lblPart.Create(Label,"Part :",True,480,255,0,165,165,True,0,"Arial",8,-2147483633,0)
+Gui.FormPacksizeMaintenance.txtPart.Create(TextBox,"",True,1920,300,0,660,75,False,0,"Arial",8,-2147483643,1)
+Gui.FormPacksizeMaintenance.lblLoc.Create(Label,"Location :",True,810,255,0,2715,165,True,0,"Arial",8,-2147483633,0)
+Gui.FormPacksizeMaintenance.txtLoc.Create(TextBox,"",True,300,300,0,3555,75,False,0,"Arial",8,-2147483643,1)
+Gui.FormPacksizeMaintenance.gsgcPacksize.Create(GsGridControl)
+Gui.FormPacksizeMaintenance.gsgcPacksize.Size(20760,4335)
+Gui.FormPacksizeMaintenance.gsgcPacksize.Position(0,450)
+Gui.FormPacksizeMaintenance.gsgcPacksize.Event(RowCellClick,gsgcPacksize_RowCellClick)
+Gui.FormPacksizeMaintenance.gsgcPacksize.Event(CellValueChanged,gsgcPacksize_CellValueChanged)
+Gui.FormPacksizeMaintenance.gsgcPacksize.Anchor(15)
+Gui.FormPacksizeMaintenance.cmdSave.Create(Button)
+Gui.FormPacksizeMaintenance.cmdSave.Size(990,375)
+Gui.FormPacksizeMaintenance.cmdSave.Position(19695,4815)
+Gui.FormPacksizeMaintenance.cmdSave.Caption("Save")
+Gui.FormPacksizeMaintenance.cmdSave.Event(Click,cmdSave_Click)
+Gui.FormPacksizeMaintenance.cmdSave.Anchor(10)
+Gui.FormPacksizeMaintenance.cmdAddLine.Create(Button)
+Gui.FormPacksizeMaintenance.cmdAddLine.Size(990,375)
+Gui.FormPacksizeMaintenance.cmdAddLine.Position(45,4815)
+Gui.FormPacksizeMaintenance.cmdAddLine.Caption("Add")
+Gui.FormPacksizeMaintenance.cmdAddLine.Event(Click,cmdAddLine_Click)
+Gui.FormPacksizeMaintenance.cmdAddLine.Anchor(6)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+V.Global.sDesignIDs.Declare(String)
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'GCG_5411_PacksizeMaintenance.g2u
+'Trey S
+'1/23/2019
+'For Vulcan Industires
+'This script is for setting up the packing options for each part
+
+V.Local.sPart.Declare(String)
+
+'10120 - Inv populate - 7 PNO, 8 REV, 9 LOC
+'10210 - Inv Script 1 - 000068
+
+F.Intrinsic.Control.SelectCase(V.Caller.Hook)
+	F.Intrinsic.Control.Case(10120)
+		V.Passed.000068.Set("Packsize")
+	F.Intrinsic.Control.Case(10210)
+		F.Intrinsic.String.GSSPartString(V.Passed.000007.Trim, V.Passed.000008.Trim, V.Local.sPart)
+		GUI.FormPacksizeMaintenance.txtPart.Text(V.Local.sPart)
+		GUi.FormPacksizeMaintenance.txtLoc.Text(V.Passed.000009.Trim)
+		F.Intrinsic.Control.CallSub(LoadData)
+		F.Intrinsic.Control.CallSub(LoadGrid)
+		GUI.FormPacksizeMaintenance..Show
+		
+F.Intrinsic.Control.EndSelect
+Program.Sub.Main.End
+
+Program.Sub.cmdSave_Click.Start
+V.Local.sTemp.Declare(String)
+V.Local.iCounter.Declare(Long)
+V.Local.bStop.Declare(Boolean)
+V.Local.sSQL.Declare(String)
+
+GUI.FormPacksizeMaintenance.cmdSave.Enabled(False)
+F.Data.DataView.Create("dtPS", "dvTemp", 22, "[Item] = ''", "")
+F.Intrinsic.Control.IF(V.DataView.dtPS!dvTemp.RowCount, >, 0)
+	F.Intrinsic.UI.Msgbox("Item cannot be blank")
+	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+	F.Data.DataView.Close("dtPS", "dvTemp")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+'F.Data.DataView.SetFilter("dtPS", "dvTemp", "[Length] = 0")
+'F.Intrinsic.Control.IF(V.DataView.dtPS!dvTemp.RowCount, >, 0)
+'	F.Intrinsic.UI.Msgbox("Length cannot be 0")
+'	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'	F.Data.DataView.Close("dtPS", "dvTemp")
+'	F.Intrinsic.Control.ExitSub
+'F.Intrinsic.Control.EndIf
+
+'F.Data.DataView.SetFilter("dtPS", "dvTemp", "[Height] = 0")
+'F.Intrinsic.Control.IF(V.DataView.dtPS!dvTemp.RowCount, >, 0)
+'	F.Intrinsic.UI.Msgbox("Height cannot be 0")
+'	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'	F.Data.DataView.Close("dtPS", "dvTemp")
+'	F.Intrinsic.Control.ExitSub
+'F.Intrinsic.Control.EndIf
+
+'F.Data.DataView.SetFilter("dtPS", "dvTemp", "[Width] = 0")
+'F.Intrinsic.Control.IF(V.DataView.dtPS!dvTemp.RowCount, >, 0)
+'	F.Intrinsic.UI.Msgbox("Width cannot be 0")
+'	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'	F.Data.DataView.Close("dtPS", "dvTemp")
+'	F.Intrinsic.Control.ExitSub
+'F.Intrinsic.Control.EndIf
+
+F.Data.DataView.SetFilter("dtPS", "dvTemp", "[Thickness] = 0")
+F.Intrinsic.Control.IF(V.DataView.dtPS!dvTemp.RowCount, >, 0)
+	F.Intrinsic.UI.Msgbox("Thickness cannot be 0")
+	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+	F.Data.DataView.Close("dtPS", "dvTemp")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Data.DataView.SetFilter("dtPS", "dvTemp", "[Design_ID] = ''")
+F.Intrinsic.Control.IF(V.DataView.dtPS!dvTemp.RowCount, >, 0)
+	F.Intrinsic.UI.Msgbox("Design ID cannot be blank")
+	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+	F.Data.DataView.Close("dtPS", "dvTemp")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Data.DataView.SetFilter("dtPS", "dvTemp", "[Qty] = 0")
+F.Intrinsic.Control.IF(V.DataView.dtPS!dvTemp.RowCount, >, 0)
+	F.Intrinsic.UI.Msgbox("Quantity cannot be 0")
+	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+	F.Data.DataView.Close("dtPS", "dvTemp")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+'F.Intrinsic.Control.If(V.Local.bStop)
+'	GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'	F.Data.DataView.Close("dtPS", "dvTemp")
+'	F.Intrinsic.Control.ExitSub
+'F.Intrinsic.Control.EndIf
+
+'F.Intrinsic.Control.For(V.Local.iCounter, 0, V.DataTable.dtPS.RowCount--, 1)
+'	V.Local.sTemp.Set(V.DataTable.dtPS(V.Local.iCounter).Item!FieldValTrim)
+'	F.Intrinsic.Control.If(V.Local.sTemp.Trim, =, "")
+'		F.Intrinsic.UI.Msgbox("Item cannot be blank")
+'		GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'		F.Intrinsic.Control.ExitSub
+'	F.Intrinsic.Control.EndIf
+'	
+'	V.Local.sTemp.Set(V.DataTable.dtPS(V.Local.iCounter).Length!FieldValTrim)
+'	F.Intrinsic.Control.If(V.Local.sTemp.Trim, =, "")
+'		F.Intrinsic.UI.Msgbox("Length cannot be blank")
+'		GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'		F.Intrinsic.Control.ExitSub
+'	F.Intrinsic.Control.EndIf
+'	
+'	V.Local.sTemp.Set(V.DataTable.dtPS(V.Local.iCounter).Width!FieldValTrim)
+'	F.Intrinsic.Control.If(V.Local.sTemp.Trim, =, "")
+'		F.Intrinsic.UI.Msgbox("Width cannot be blank")
+'		GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'		F.Intrinsic.Control.ExitSub
+'	F.Intrinsic.Control.EndIf
+'	
+'	V.Local.sTemp.Set(V.DataTable.dtPS(V.Local.iCounter).Height!FieldValTrim)
+'	F.Intrinsic.Control.If(V.Local.sTemp.Trim, =, "")
+'		F.Intrinsic.UI.Msgbox("Height cannot be blank")
+'		GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'		F.Intrinsic.Control.ExitSub
+'	F.Intrinsic.Control.EndIf
+'	
+'	V.Local.sTemp.Set(V.DataTable.dtPS(V.Local.iCounter).Thickness!FieldValTrim)
+'	F.Intrinsic.Control.If(V.Local.sTemp.Trim, =, "")
+'		F.Intrinsic.UI.Msgbox("Thickness cannot be blank")
+'		GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'		F.Intrinsic.Control.ExitSub
+'	F.Intrinsic.Control.EndIf
+'	
+'	V.Local.sTemp.Set(V.DataTable.dtPS(V.Local.iCounter).DESIGN_ID!FieldValTrim)
+'	F.Intrinsic.Control.If(V.Local.sTemp.Trim, =, "")
+'		F.Intrinsic.UI.Msgbox("Design ID cannot be blank")
+'		GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'		F.Intrinsic.Control.ExitSub
+'	F.Intrinsic.Control.EndIf
+'	
+'	V.Local.sTemp.Set(V.DataTable.dtPS(V.Local.iCounter).Qty!FieldValTrim)
+'	F.Intrinsic.Control.If(V.Local.sTemp.Trim, =, "")
+'		F.Intrinsic.UI.Msgbox("Quantity cannot be blank")
+'		GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+'		F.Intrinsic.Control.ExitSub
+'	F.Intrinsic.Control.EndIf
+'F.Intrinsic.Control.Next(V.Local.iCounter)
+
+F.Intrinsic.String.Build("delete from GCG_5411_Packsize where PART = '{0}' and LOC = '{1}'", V.Screen.FormPacksizeMaintenance!txtPart.Text.Trim, V.Screen.FormPacksizeMaintenance!txtLoc.Text.Trim, V.Local.sSQL)
+
+F.Data.DataTable.AddColumn("dtPS", "Part", "String", V.Screen.FormPacksizeMaintenance!txtPart.Text.Trim)
+F.Data.DataTable.AddColumn("dtPS", "Loc", "String", V.Screen.FormPacksizeMaintenance!txtLoc.Text.Trim)
+F.Data.DataTable.AddColumn("dtPS", "Sequence", "Integer")
+F.Data.DataTable.SetSeries("dtPS", "Sequence", 0, 1)
+
+F.ODBC.Connection!Con.OpenCompanyConnection
+F.ODBC.Connection!Con.Execute(V.Local.sSQL)
+F.Data.DataTable.SaveToDB("dtPS", "Con", "GCG_5411_Packsize", "PART*!*LOC*!*SEQUENCE", 256, "ITEM@!@ITEM*!*LENGTH@!@LENGTH*!*WIDTH@!@WIDTH*!*HEIGHT@!@HEIGHT*!*THICKNESS@!@THICK*!*DESIGN_ID@!@DESIGN_ID*!*QTY@!@QTY_PER*!*PART@!@PART*!*LOC@!@LOC*!*SEQUENCE@!@SEQUENCE*!*X1@!@X1*!*X2@!@X2*!*X3@!@X3*!*X4@!@X4*!*X5@!@X5*!*X6@!@X6*!*X7@!@X7*!*X8@!@X8*!*X9@!@X9*!*X10@!@X10")
+F.ODBC.Connection!Con.Close
+
+F.Data.DataTable.RemoveColumn("dtPS", "Part")
+F.Data.DataTable.RemoveColumn("dtPS", "Loc")
+F.Data.DataTable.RemoveColumn("dtPS", "Sequence")
+
+GUI.FormPacksizeMaintenance.cmdSave.Enabled(True)
+F.Data.DataView.Close("dtPS", "dvTemp")
+Program.Sub.cmdSave_Click.End
+
+Program.Sub.FormPacksizeMaintenance_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.FormPacksizeMaintenance_UnLoad.End
+
+Program.Sub.gsgcPacksize_RowCellClick.Start
+F.Intrinsic.Control.If(V.Args.Column.Trim, =, "Delete")
+	F.Data.DataTable.DeleteRow("dtPS", V.Args.RowIndex)
+F.Intrinsic.Control.EndIf
+Program.Sub.gsgcPacksize_RowCellClick.End
+
+Program.Sub.LoadData.Start
+V.Local.sSQL.Declare(String)
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.String.Build("Select RTRIM(ITEM) as Item, Length as Length, Width as Width, Height as Height, Thick as Thickness, RTRIM(DESIGN_ID) as DESIGN_ID, QTY_PER as Qty, RTRIM(X1) as X1, RTRIM(X2) as X2, RTRIM(X3) as X3, RTRIM(X4) as X4, RTRIM(X5) as X5, RTRIM(X6) as X6, RTRIM(X7) as X7, RTRIM(X8) as X8, RTRIM(X9) as X9, RTRIM(X10) as X10 from GCG_5411_Packsize where PART = '{0}' and Loc = '{1}'", V.Screen.FormPacksizeMaintenance!txtPart.Text.Trim, V.Screen.FormPacksizeMaintenance!txtLoc.Text.Trim, V.Local.sSQL)
+
+F.ODBC.Connection!Con.OpenCompanyConnection
+F.Data.DataTable.CreateFromSQL("dtPS", "Con", V.Local.sSQL, True)
+F.ODBC.Connection!Con.ExecuteAndReturn("select RTRIM(DESIGN_ID) from GCG_5411_DESIGNID", V.Local.sRet)
+F.ODBC.Connection!Con.Close
+
+F.Intrinsic.Control.If(V.Ambient.ExecuteAndReturnEOF)
+	V.Global.sDesignIDs.Set("")
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Replace(V.Local.sRet, "#$#", "*!*", V.Global.sDesignIDs)
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.AddColumn("dtPS", "Delete", "String")
+
+F.Intrinsic.Control.If(V.DataTable.dtPS.RowCount, =, 0)
+	F.Data.DataTable.AddRow("dtPS", "Item", "Carton", "Length", 0, "Width", 0, "Height", 0, "Thickness", 0, "Qty", 0, "Design_ID", "")
+	F.Data.DataTable.AddRow("dtPS", "Item", "Top", "Length", 0, "Width", 0, "Height", 0, "Thickness", 0, "Qty", 0, "Design_ID", "")
+	F.Data.DataTable.AddRow("dtPS", "Item", "Sleeve", "Length", 0, "Width", 0, "Height", 0, "Thickness", 0, "Qty", 0, "Design_ID", "")
+	F.Data.DataTable.AddRow("dtPS", "Item", "Pad", "Length", 0, "Width", 0, "Height", 0, "Thickness", 0, "Qty", 0, "Design_ID", "")
+F.Intrinsic.Control.EndIf
+Program.Sub.LoadData.End
+
+Program.Sub.LoadGrid.Start
+GUI.FormPacksizeMaintenance.gsgcPacksize.AddGridviewFromDatatable("gvPS", "dtPS")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "DESIGN_ID", "Caption", "Design ID")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "Caption", "Qty Per Box/Kit")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "Caption", "Corrugated Thickness")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "DESIGN_ID", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Item", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Delete", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X1", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X2", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X3", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X4", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X5", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X6", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X7", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X8", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X9", "HeaderFontBold", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X10", "HeaderFontBold", "True")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "DESIGN_ID", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Item", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Delete", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X1", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X2", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X3", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X4", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X5", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X6", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X7", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X8", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X9", "HeaderHAlignment", "Center")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X10", "HeaderHAlignment", "Center")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "DESIGN_ID", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Item", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Delete", "AllowEdit", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X1", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X2", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X3", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X4", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X5", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X6", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X7", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X8", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X9", "AllowEdit", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X10", "AllowEdit", "True")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "DESIGN_ID", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Item", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Delete", "ReadOnly", "True")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X1", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X2", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X3", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X4", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X5", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X6", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X7", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X8", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X9", "ReadOnly", "False")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X10", "ReadOnly", "False")
+
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "EditMaskType", "Numeric")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "EditMask", "#########.##")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "EditMaskAsDisplayFormat", "True")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "EditMaskType", "Numeric")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "EditMask", "#########.##")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "EditMaskAsDisplayFormat", "True")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "EditMaskType", "Numeric")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "EditMask", "#########0")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "EditMaskAsDisplayFormat", "True")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "EditMaskType", "Numeric")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "EditMask", "#########.##")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "EditMaskAsDisplayFormat", "True")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "EditMaskType", "Numeric")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "EditMask", "#########")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "EditMaskAsDisplayFormat", "True")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Item", "MaxLength", 6)
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Design_ID", "MaxLength", 7)
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.ColumnEdit("gvPS", "Design_ID", "DropDownList", V.Global.sDesignIDs)
+GUI.FormPacksizeMaintenance.gsgcPacksize.ColumnEdit("gvPS", "Delete", "EditorButton", "Delete")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Thickness", "MinWidth", "140")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Delete", "Width", "40")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Item", "Width", "50")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "Width", "50")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "Width", "50")
+'GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "Width", "50")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Qty", "MinWidth", "120")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Delete", "MinWidth", "50")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Design_ID", "MinWidth", "80")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Item", "MinWidth", "60")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Length", "MinWidth", "60")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Width", "MinWidth", "60")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "Height", "MinWidth", "60")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X1", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X2", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X3", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X4", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X5", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X6", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X7", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X8", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X9", "MinWidth", "40")
+GUI.FormPacksizeMaintenance.gsgcPacksize.SetColumnProperty("gvPS", "X10", "MinWidth", "40")
+
+GUI.FormPacksizeMaintenance.gsgcPacksize.MainView("gvPS")
+Program.Sub.LoadGrid.End
+
+Program.Sub.gsgcPacksize_CellValueChanged.Start
+V.Local.sTemp.Declare(String)
+
+F.Intrinsic.Control.SelectCase(V.Args.Column)
+	F.Intrinsic.Control.CaseAny("Length", "Width", "Thickness", "Qty", "Height")
+		V.Local.sTemp.Set(V.DataTable.dtPS(V.Args.RowIndex).[V.Args.Column]!FieldValTrim)
+		F.Intrinsic.String.Replace(V.Local.sTemp, "-", "", V.Local.sTemp)
+		F.Data.DataTable.SetValue("dtPS", V.Args.RowIndex, V.Args.Column, V.Local.sTemp)
+F.Intrinsic.Control.EndSelect
+Program.Sub.gsgcPacksize_CellValueChanged.End
+
+Program.Sub.cmdAddLine_Click.Start
+F.Data.DataTable.AddRow("dtPS", "Length", 0, "Width", 0, "Height", 0, "Thickness", 0, "Qty", 0, "Item", "", "Design_ID", "")
+Program.Sub.cmdAddLine_Click.End
