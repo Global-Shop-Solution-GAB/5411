@@ -1,0 +1,497 @@
+Program.Sub.ScreenSU.Start
+Gui.FormPacksizeRequest..Create
+Gui.FormPacksizeRequest..Caption("Packsize Box & Label Request")
+Gui.FormPacksizeRequest..Size(18180,3270)
+Gui.FormPacksizeRequest..MinX(0)
+Gui.FormPacksizeRequest..MinY(0)
+Gui.FormPacksizeRequest..Position(0,0)
+Gui.FormPacksizeRequest..BackColor(-2147483633)
+Gui.FormPacksizeRequest..MousePointer(0)
+Gui.FormPacksizeRequest..Event(UnLoad,FormPacksizeRequest_UnLoad)
+Gui.FormPacksizeRequest..AlwaysOnTop(True)
+Gui.FormPacksizeRequest..MaxButton(False)
+Gui.FormPacksizeRequest..MinButton(False)
+Gui.FormPacksizeRequest..Sizeable(False)
+Gui.FormPacksizeRequest.lblWO.Create(Label,"WO :",True,1635,630,0,135,795,True,0,"Arial",28,-2147483633,0)
+Gui.FormPacksizeRequest.txtWO.Create(TextBox,"",True,3075,750,0,1650,705,True,0,"Arial",28,-2147483643,1)
+Gui.FormPacksizeRequest.txtWO.MaxLength(9)
+Gui.FormPacksizeRequest.txtWO.TabStop(True)
+Gui.FormPacksizeRequest.txtWO.TabIndex(1)
+Gui.FormPacksizeRequest.txtWO.Event(Change,txtWO_Change)
+Gui.FormPacksizeRequest.lblBoxes.Create(Label,"# of Boxes :",True,3285,630,0,4980,795,True,0,"Arial",28,-2147483633,0)
+Gui.FormPacksizeRequest.txtBoxes.Create(TextBox,"",True,1935,750,0,8160,705,True,0,"Arial",28,-2147483643,1)
+Gui.FormPacksizeRequest.txtBoxes.MaxLength(5)
+Gui.FormPacksizeRequest.txtBoxes.NumericOnly(2)
+Gui.FormPacksizeRequest.txtBoxes.TabStop(True)
+Gui.FormPacksizeRequest.txtBoxes.TabIndex(2)
+Gui.FormPacksizeRequest.lblType.Create(Label,"Type :",True,1935,630,0,10395,795,True,0,"Arial",28,-2147483633,0)
+Gui.FormPacksizeRequest.ddlType.Create(DropDownList)
+Gui.FormPacksizeRequest.ddlType.Size(1635,750)
+Gui.FormPacksizeRequest.ddlType.Position(12180,705)
+Gui.FormPacksizeRequest.ddlType.FontSize(28)
+Gui.FormPacksizeRequest.ddlType.TabStop(True)
+Gui.FormPacksizeRequest.ddlType.TabIndex(3)
+Gui.FormPacksizeRequest.ddlType.Event(Click,ddlType_Click)
+Gui.FormPacksizeRequest.lblLabel.Create(Label,"Label :",True,2040,630,0,14130,795,True,0,"Arial",28,-2147483633,0)
+Gui.FormPacksizeRequest.ddlLabel.Create(DropDownList)
+Gui.FormPacksizeRequest.ddlLabel.Size(1800,750)
+Gui.FormPacksizeRequest.ddlLabel.Position(16095,705)
+Gui.FormPacksizeRequest.ddlLabel.FontSize(28)
+Gui.FormPacksizeRequest.ddlLabel.TabStop(True)
+Gui.FormPacksizeRequest.ddlLabel.TabIndex(4)
+Gui.FormPacksizeRequest.ddlLabel.Event(Click,ddlLabel_Click)
+Gui.FormPacksizeRequest.cmdSubmit.Create(Button)
+Gui.FormPacksizeRequest.cmdSubmit.Size(2580,810)
+Gui.FormPacksizeRequest.cmdSubmit.Position(15315,2040)
+Gui.FormPacksizeRequest.cmdSubmit.Caption("Submit")
+Gui.FormPacksizeRequest.cmdSubmit.FontSize(28)
+Gui.FormPacksizeRequest.cmdSubmit.Event(Click,cmdSubmit_Click)
+Gui.FormPacksizeRequest.cmdSubmit.Enabled(False)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+V.Global.sExportPath.Declare(String)
+V.Global.sTempLabel.Declare(String)
+V.Global.bStop.Declare(Boolean)
+V.Global.sPart.Declare(String)
+V.Global.sLoc.Declare(String)
+V.Global.sEmployee.Declare(String)
+V.Global.sJob.Declare(String)
+V.Global.sSuffix.Declare(String)
+V.Global.sParentData.Declare(String)
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+'GCG_5411_PacksizeExport.g2u
+'Trey S
+'1/23/2019
+'For Vulcan Industires
+'This script is for exporting from the GUI to Packsize
+
+'15710 - GUI Populate, 16 script 1
+'15760 - GUI Script 1, 5 employee, 9993 employee id
+
+F.Intrinsic.Control.SelectCase(V.Caller.Hook)
+	F.Intrinsic.Control.Case(15710)
+		V.Passed.000016.Set("Packsize")
+		
+	F.Intrinsic.Control.Case(15760)
+		V.Global.sEmployee.Set(V.Passed.009993.Trim)
+		F.Intrinsic.Control.If(V.Global.sEmployee, =, "")
+			F.Intrinsic.UI.Msgbox("Employee must be active to submit Packsize requests.")
+			F.Intrinsic.Control.End
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.CallSub(LoadDropDowns)
+		GUI.FormPacksizeRequest..Show
+		
+F.Intrinsic.Control.EndSelect
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.LoadDropDowns.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+GUI.FormPacksizeRequest.ddlLabel.AddItem("UTI")
+GUI.FormPacksizeRequest.ddlLabel.AddItem("IMS")
+GUI.FormPacksizeRequest.ddlLabel.AddItem("NONE")
+GUI.FormPacksizeRequest.ddlType.AddItem("Bulk")
+GUI.FormPacksizeRequest.ddlType.AddItem("Kit")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.LoadDropDowns.End
+
+Program.Sub.cmdSubmit_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sJob.Declare(String)
+V.Local.sSuffix.Declare(String)
+V.Local.sParentData.Declare(String)
+
+F.ODBC.Connection!Con.OpenCompanyConnection
+
+V.Global.bStop.Set(False)
+F.Intrinsic.Control.CallSub(PreRunCheck)
+F.Intrinsic.Control.If(V.Global.bStop)
+	F.ODBC.Connection!Con.Close
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+'F.Intrinsic.Control.If(V.Caller.Terminal, =, 585, AND, V.Caller.User, =, "SUPERVSR")
+'	Function.Intrinsic.Debug.InvokeDebugger
+'	Function.Intrinsic.Debug.Stop
+'F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub(GetSettings)
+F.Intrinsic.Control.If(V.Global.bStop)
+	F.ODBC.Connection!Con.Close
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub(GetPacksizeData)
+F.Intrinsic.Control.If(V.Global.bStop)
+	F.ODBC.Connection!Con.Close
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub(GetWOParentInfo)
+
+F.ODBC.Connection!Con.Close
+
+GUI.FormPacksizeRequest..Enabled(False)
+F.Intrinsic.Control.CallSub(GenerateExportFile)
+F.Intrinsic.UI.Msgbox("Request Successful")
+'F.Intrinsic.Control.CallSub(FormPacksizeRequest_UnLoad)
+
+GUI.FormPacksizeRequest.ddlLabel.ListIndex(-1)
+GUI.FormPacksizeRequest.ddlType.ListIndex(-1)
+GUI.FormPacksizeRequest.txtBoxes.Text("")
+GUI.FormPacksizeRequest.txtWO.Text("")
+GUI.FormPacksizeRequest.cmdSubmit.Enabled(False)
+GUI.FormPacksizeRequest..Enabled(True)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdSubmit_Click.End
+
+Program.Sub.GetSettings.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sSQL.Declare(String)
+V.Local.sSelect.Declare(String)
+V.Local.sDTReturn.Declare(String)
+
+V.Local.sSQL.Set("select RTRIM(SETTING) as SETTING, RTRIM(VALUE) as VALUE from GCG_5411_Maintenance where SETTING = 'EXP' or SETTING = 'LBL'")
+F.Data.DataTable.CreateFromSQL("dtSettings", "Con", V.Local.sSQL)
+
+F.Data.DataTable.Select("dtSettings" ,"SETTING = 'EXP'", V.Local.sDTReturn)
+F.Intrinsic.Control.If(V.Local.sDTReturn.IsNotNoReturn)
+	V.Global.sExportPath.Set(V.DataTable.dtSettings(V.Local.sDTReturn).VALUE!FieldValTrim)
+	F.Intrinsic.Control.If(V.Global.sExportPath.Trim, =, "")
+		F.Intrinsic.UI.Msgbox("Error: No valid Export Path set up in Packsize Interface Maintenance.")
+		V.Global.bStop.Set(True)
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("Error: No valid Export Path set up in Packsize Interface Maintenance.")
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.Select("dtSettings" ,"SETTING = 'LBL'", V.Local.sDTReturn)
+F.Intrinsic.Control.If(V.Local.sDTReturn.IsNotNoReturn)
+	V.Global.sTempLabel.Set(V.DataTable.dtSettings(V.Local.sDTReturn).VALUE!FieldValTrim)
+	F.Intrinsic.Control.If(V.Global.sTempLabel.Trim, =, "")
+		F.Intrinsic.UI.Msgbox("Error: No valid Label File set up in Packsize Interface Maintenance.")
+		V.Global.bStop.Set(True)
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("Error: No Label File set up in Packsize Interface Maintenance.")
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.Close("dtSettings")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.GetSettings.End
+
+Program.Sub.PreRunCheck.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sSQL.Declare(String)
+V.Local.sWO.Declare(String)
+V.Local.sRet.Declare(String)
+
+V.Local.sWO.Set(V.Screen.FormPacksizeRequest!txtWO.Text.Trim)
+F.Intrinsic.Control.If(V.Local.sWO.Trim, =, "")
+	F.Intrinsic.UI.Msgbox("Error: Work Order cannot be blank.")
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Screen.FormPacksizeRequest!txtBoxes.Text.Trim, =, "", or, V.Screen.FormPacksizeRequest!txtBoxes.Text.Trim, =, "0")
+	F.Intrinsic.UI.Msgbox("Error: # of Boxes cannot be blank.")
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Screen.FormPacksizeRequest!ddlType.Text.Trim, =, "")
+	F.Intrinsic.UI.Msgbox("Error: Type cannot be blank.")
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Screen.FormPacksizeRequest!ddlLabel.Text.Trim, =, "")
+	F.Intrinsic.UI.Msgbox("Error: Label cannot be blank.")
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Local.sWO.Length, !=, 9)
+	F.Intrinsic.Control.If(V.Local.sWO.Length, =, 6)
+		V.Global.sJob.Set(V.Local.sWO)
+		V.Global.sSuffix.Set("")
+	F.Intrinsic.Control.Else
+		F.Intrinsic.UI.Msgbox("Error: Invalid Work Order Entered.")
+		V.Global.bStop.Set(True)
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Else
+	V.Global.sJob.Set(V.Local.sWO.Left6)
+	V.Global.sSuffix.Set(V.Local.sWO.Right3)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("select RTRIM(PART) as PART, RTRIM(LOCATION) as LOCATION from V_JOB_HEADER where JOB = '{0}' and SUFFIX = '{1}'", V.Global.sJob, V.Global.sSuffix, V.Local.sSQL)
+F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSQL, V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Ambient.ExecuteAndReturnEOF)
+	F.Intrinsic.UI.Msgbox("Error: Invalid Work Order Entered.")
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Split(V.Local.sRet, "*!*", V.Local.sRet)
+	V.Global.sPart.Set(V.Local.sRet(0))
+	V.Global.sLoc.Set(V.Local.sRet(1))
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.PreRunCheck.End
+
+Program.Sub.GetPacksizeData.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sSQL.Declare(String)
+V.Local.sMessage.Declare(String)
+
+F.Intrinsic.String.Build("Select RTRIM(PART) as PART, RTRIM(LOC) as LOC, RTRIM(ITEM) as ITEM, LENGTH, WIDTH, HEIGHT, THICK, RTRIM(DESIGN_ID) as DESIGN_ID, QTY_PER, SEQUENCE, RTRIM(X1) as X1, RTRIM(X2) as X2, RTRIM(X3) as X3, RTRIM(X4) as X4, RTRIM(X5) as X5, RTRIM(X6) as X6, RTRIM(X7) as X7, RTRIM(X8) as X8, RTRIM(X9) as X9, RTRIM(X10) as X10 from GCG_5411_Packsize where PART = '{0}' and LOC = '{1}'", V.Global.sPart, V.Global.sLoc, V.Local.sSQL)
+
+F.Intrinsic.Control.If(V.DataTable.dtPacksize.Exists)
+	F.Data.DataTable.Close("dtPacksize")
+F.Intrinsic.Control.EndIf
+F.Data.DataTable.CreateFromSQL("dtPacksize", "Con", V.Local.sSQL, True)
+
+F.Intrinsic.Control.If(V.DataTable.dtPacksize.RowCount, =, 0)
+	F.Intrinsic.String.Build("No Packsize data set up for the Part {0}.", V.Global.sPart, V.Local.sMessage)
+	F.Intrinsic.UI.Msgbox(V.Local.sMessage)
+	V.Global.bStop.Set(True)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.GetPacksizeData.End
+
+Program.Sub.GetWOParentInfo.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sSQL.Declare(String)
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.String.Build("select RTRIM(JOB) as JOB, RTRIM(SUFFIX) as SUFFIX, RTRIM(PART) as PART, RTRIM(LOCATION) as LOCATION, RTRIM(DESCRIPTION) as DESCRIPTION from V_JOB_HEADER where JOB = '{0}' and SUFFIX = '000'", V.Global.sJob, V.Local.sSQL)
+F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSQL, V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Ambient.ExecuteAndReturnEOF)
+	V.Global.sParentData.Set("*!**!**!**!*")
+F.Intrinsic.Control.Else
+	V.Global.sParentData.Set(V.Local.sRet)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.GetWOParentInfo.End
+
+Program.Sub.GenerateExportFile.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sColumns.Declare(String)
+V.Local.sTypes.Declare(String)
+V.Local.iBoxes.Declare(String)
+V.Local.sJS.Declare(String)
+V.Local.iItems.Declare(Long)
+V.Local.sParent.Declare(String)
+V.Local.iCounter.Declare(Long)
+V.Local.iTemp.Declare(Long)
+V.Local.sPath.Declare(String)
+V.Local.sLabel.Declare(String)
+V.Local.sFileData.Declare(String)
+V.Local.sHeader.Declare(String)
+
+V.Local.sColumns.Set("JS*!*WO_Part*!*User_ID*!*Label_Type*!*Mach_NO*!*Label_Temp*!*WO_Part_Parent*!*WO_Desc_Parent*!*WO_No_Parent*!*WO_Suffix_Parent")
+V.Local.sTypes.Set("String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String")
+F.Data.DataTable.CreateFromString("dtExportTemp", "", V.Local.sColumns, V.Local.sTypes, "!*!", "@!@")
+
+F.Intrinsic.String.Build("{0}-{1}", V.Global.sJob, V.Global.sSuffix, V.Local.sJS)
+F.Data.DataTable.SetValue("dtExportTemp", -1, "JS", V.Local.sJS, "WO_Part", V.Global.sPart, "User_ID", V.Global.sEmployee, "Mach_NO", V.Caller.Terminal)
+F.Data.Linq.Join("LeftJoin" ,"DataTable" ,"dtPacksize*!*A", "DataTable", "dtExportTemp*!*B", "A.Part = B.WO_Part", "B.JS*!*B.WO_Part*!*B.User_ID*!*B.Label_Type*!*B.Mach_No*!*A.Item*!*A.Length*!*A.Width*!*A.Height*!*A.Thick as Corr_Thickness*!*A.Design_ID*!*A.Qty_Per as Qty_WO*!*B.Label_Temp*!*B.WO_Part_Parent*!*B.WO_Desc_Parent*!*B.WO_No_Parent*!*B.WO_Suffix_Parent*!*A.X1*!*A.X2*!*A.X3*!*A.X4*!*A.X5*!*A.X6*!*A.X7*!*A.X8*!*A.X9*!*A.X10", "", "", "", "dtExportBase", True)
+
+F.Data.DataTable.SetValueFormat("dtExportBase", -1, "Corr_Thickness", "Corr_Thickness", "#######0")
+
+V.Local.iItems.Set(V.DataTable.dtPacksize.RowCount)
+F.Data.DataTable.Close("dtPacksize")
+F.Data.DataTable.Close("dtExportTemp")
+
+'doing this so we can sort by it later when we add the Label row
+F.Data.DataTable.AddColumn("dtExportBase", "Sequence", "Integer")
+F.Data.DataTable.SetSeries("dtExportBase", "Sequence", 0, 10)
+
+F.Intrinsic.String.Split(V.Global.sTempLabel, "\", V.Local.sLabel)
+F.Intrinsic.String.Split(V.Global.sParentData, "*!*", V.Local.sParent)
+F.Intrinsic.String.Replace(V.Local.sParent(4), ",", "", True, V.Local.sParent(4))
+F.Data.DataTable.SetValue("dtExportBase", 0, "Label_Temp", V.Local.sLabel(V.Local.sLabel.UBound), "WO_Part_Parent", V.Local.sParent(2), "WO_Desc_Parent", V.Local.sParent(4), "WO_No_Parent", V.Local.sParent(0), "WO_Suffix_Parent", V.Local.sParent(1))
+
+F.Intrinsic.Control.If(V.Screen.FormPacksizeRequest!ddlLabel.Text.Trim, !=, "NONE")
+	F.Data.DataTable.AddRow("dtExportBase", "JS", V.Local.sJS, "WO_Part", V.Global.sPart, "User_ID", V.Global.sEmployee, "Label_Type", V.Screen.FormPacksizeRequest!ddlLabel.Text.Trim, "Mach_No", V.Caller.Terminal, "Qty_WO", 4, "Sequence", 5)
+F.Intrinsic.Control.EndIf
+
+F.Data.DataView.Create("dtExportBase", "dvSorted", 22, "", "Sequence")
+F.Data.DataView.ToDataTable("dtExportBase", "dvSorted", "dtExport", True)
+F.Data.DataView.Close("dtExportBase", "dvSorted")
+F.Data.DataTable.Close("dtExportBase")
+
+'now we have our finished sorted base dt, need to now account for kit / bulk
+'bulk is just multiple everything by qty entered
+'kit is make that many of this dt
+
+F.Data.DataTable.Clone("dtExport", "dtExportFinal", True)
+F.Data.DataTable.Merge("dtExport", "dtExportFinal", True, 2)
+V.Local.iBoxes.Set(V.Screen.FormPacksizeRequest!txtBoxes.Text.Trim)
+F.Intrinsic.Control.If(V.Screen.FormPacksizeRequest!ddlType.Text.Trim, =, "Kit")
+	F.Intrinsic.Control.If(V.Local.iBoxes, >, 1)
+		F.Intrinsic.Control.For(V.Local.iCounter, 2, V.Local.iBoxes, 1)
+			F.Data.DataTable.Merge("dtExport", "dtExportFinal", True, 2)
+		F.Intrinsic.Control.Next(V.Local.iCounter)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.ElseIf(V.Screen.FormPacksizeRequest!ddlType.Text.Trim, =, "Bulk")
+	F.Intrinsic.Control.If(V.DataTable.dtExport.RowCount, >, 0)
+		F.Intrinsic.Control.For(V.Local.iCounter, 0, V.DataTable.dtExport.RowCount--, 1)
+			F.Intrinsic.Math.Mult(V.Local.iBoxes, V.DataTable.dtExport(V.Local.iCounter).Qty_WO!FieldValLong, V.Local.iTemp)
+			F.Data.DataTable.SetValue("dtExportFinal", V.Local.iCounter, "Qty_WO", V.Local.iTemp)
+		F.Intrinsic.Control.Next(V.Local.iCounter)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("How did you even get here?")
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndIf
+F.Data.DataTable.Close("dtExport")
+
+F.Data.DataTable.RemoveColumn("dtExportFinal", "Sequence")
+
+F.Intrinsic.String.Build("{0}\PacksizeRQ_{3}_{1}_{2}.csv", V.Global.sExportPath, V.Ambient.Date.FormatMM-DD-YYYY, V.Ambient.Time.FormatHH-NN-SS, V.Caller.Terminal, V.Local.sPath)
+
+'F.Data.DataTable.SaveToCSV("dtExportFinal", V.Local.sPath, True)
+F.Data.DataView.Create("dtExportFinal", "dvExportString")
+F.Data.DataView.ToString("dtExportFinal", "dvExportString", ",", V.Ambient.NewLine, V.Local.sFileData)
+
+V.Local.sHeader.Set("JS,WO_Part,User_ID,Label_Type,Mach_No,Item,Length,Width,Height,Corr_Thickness,Design_ID,Qty_WO,Label_Temp,WO_Part_Parent,WO_Desc_Parent,WO_No_Parent,WO_Suffix_Parent,X1,X2,X3,X4,X5,X6,X7,X8,X9,X10")
+F.Intrinsic.String.Build("{0}{1}{2}", V.Local.sHeader, V.Ambient.NewLine, V.Local.sFileData, V.Local.sFileData)
+F.Intrinsic.File.String2File(V.Local.sPath, V.Local.sFileData)
+
+F.Data.DataTable.Close("dtExportFinal")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.GenerateExportFile.End
+
+Program.Sub.FormPacksizeRequest_UnLoad.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+GUI.FormPacksizeRequest..Visible(False)
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.FormPacksizeRequest_UnLoad.End
+
+Program.Sub.ddlType_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+F.Intrinsic.Control.If(V.Screen.FormPacksizeRequest!ddlLabel.Text.Trim, !=, "")
+	GUI.FormPacksizeRequest.cmdSubmit.Enabled(True)
+'	GUI.FormPacksizeRequest.cmdSubmit.SetFocus
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.ddlType_Click.End
+
+Program.Sub.ddlLabel_Click.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+F.Intrinsic.Control.If(V.Screen.FormPacksizeRequest!ddlType.Text.Trim, !=, "")
+	GUI.FormPacksizeRequest.cmdSubmit.Enabled(True)
+	'GUI.FormPacksizeRequest.cmdSubmit.SetFocus
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.ddlLabel_Click.End
+
+Program.Sub.txtWO_Change.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sTemp.Declare(String)
+
+V.Local.sTemp.Set(V.Screen.FormPacksizeRequest!txtWO.Text.Trim)
+F.Intrinsic.Control.If(V.Local.sTemp.Length, =, 9)
+	GUI.FormPacksizeRequest.txtBoxes.SetFocus
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.txtWO_Change.End
